@@ -1,0 +1,1 @@
+web: target/universal/stage/bin/aqikr -Dplay.evolutions.db.default.autoApply=true
