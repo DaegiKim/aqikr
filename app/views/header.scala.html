@@ -1,0 +1,26 @@
+@import utils.MenuType
+@(menuType: MenuType)
+@isActiveMenu(m_type: MenuType) = @{
+    if(m_type == menuType){ "active" }
+}
+<header class="navbar">
+    <section class="navbar-section">
+        <a style="padding: 0;" href="@routes.HomeController.index()" class="btn btn-link btn-lg">
+            <img style="height: 40px;" src="@routes.Assets.versioned("images/icons/weather/sunny.png")" alt="">
+        </a>
+        <a href="@routes.HomeController.index()" class="navbar-brand">AQIkr</a>
+        <a href="@routes.HomeController.pm10()" class="@isActiveMenu(utils.MenuType.PM10) btn btn-link">미세먼지</a>
+        <a href="@routes.HomeController.pm25()" class="@isActiveMenu(utils.MenuType.PM25) btn btn-link">초미세먼지</a>
+    </section>
+    <section class="navbar-section hide-md">
+        <span id="aqi-indicator">
+            <span class="good">좋음</span>
+            <span class="moderate">보통</span>
+            <span class="unhealthy-for-sensitive-groups">민감한 집단에 해로움</span>
+            <span class="unhealthy">해로움</span>
+            <span class="very-unhealthy">매우 해로움</span>
+            <span class="hazardous">위험</span>
+        </span>
+        @*<a href="#" class="btn btn-link">AQI란?</a>*@
+    </section>
+</header>

@@ -1,5 +1,5 @@
-@(stations: List[Station], airRawDataList: List[AirRawData])
-@main("Welcome to Play") {
+@(stations: List[Station], airRawDataList: List[AirRawData], menuType: utils.MenuType)
+@main("실시간 미세먼지 - AQIkr", menuType) {
     <div id="map" style="width: 100%; height: 100%;"></div>
     <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=1e218ac71dc2e4ddede21fd356f08ec2"></script>
     <script>
@@ -29,19 +29,27 @@
                         ];
 
                         var polygon = new daum.maps.Polygon({
-                            path:polygonPath, // 그려질 다각형의 좌표 배열입니다
-                            strokeWeight: 1, // 선의 두께입니다
-                            strokeColor: '#FF0000', // 선의 색깔입니다
-                            strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                            strokeStyle: 'solid', // 선의 스타일입니다
-                            fillColor: '@AirRawData.getColor(AirRawData.AQIPM25(AirRawData.getByStation(station, airRawDataList).pm25Value))', // 채우기 색깔입니다
-                            fillOpacity: 0.5 // 채우기 불투명도 입니다
+                            path:polygonPath,
+                            strokeWeight: 1,
+                            strokeColor: '#000',
+                            strokeOpacity: 0.8,
+                            strokeStyle: 'solid',
+                            @if(menuType.equals(utils.MenuType.PM10)) {
+                            fillColor: '@AirRawData.getColor(AirRawData.AQIPM10(AirRawData.getByStation(station, airRawDataList).pm10Value))',
+                            } else {
+                            fillColor: '@AirRawData.getColor(AirRawData.AQIPM25(AirRawData.getByStation(station, airRawDataList).pm25Value))',
+                            }
+                            fillOpacity: 0.5
                         });
 
                         polygon.setMap(map);
 
                         @defining(station.getCentralGeoCoordinate) { center =>
+                            @if(menuType.equals(utils.MenuType.PM10)) {
+                            var name = '@AirRawData.AQIPM10(AirRawData.getByStation(station, airRawDataList).pm10Value)';
+                            } else {
                             var name = '@AirRawData.AQIPM25(AirRawData.getByStation(station, airRawDataList).pm25Value)';
+                            }
                             var customOverlay = new daum.maps.CustomOverlay({
                                 position: new daum.maps.LatLng(@center.getLeft, @center.getRight),
                                 content: '<div class ="label"><span class="left"></span><span class="center">'+name+'</span><span class="right"></span></div>'
@@ -52,6 +60,7 @@
                     }
                 }
             }
+            map.setZoomable(false);
     </script>
 
 }

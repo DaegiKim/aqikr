@@ -12,3 +12,7 @@ libraryDependencies ++= Seq(
   javaWs,
   evolutions
 )
+
+includeFilter in (Assets, LessKeys.less) := "spectre.less"
+includeFilter in (Assets, LessKeys.less) := "*.less"
+excludeFilter in (Assets, LessKeys.less) := "_*.less"

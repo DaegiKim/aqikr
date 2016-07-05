@@ -3,4 +3,67 @@ html {
 }
 body {
   height: 100%;
+  &>header.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 3;
+    font-size: 0;
+    section.navbar-section {
+      a.navbar-brand {
+        margin: 0 1rem;
+      }
+      a {
+        &.active {
+          font-weight: bold;
+          background-color: rgb(236, 74, 148);
+          color: #fff;
+        }
+      }
+    }
+  }
+  &>.container {
+    position: relative;
+    height: 100%;
+    margin: 62px 0 0;
+    padding: 0;
+  }
+}
+#aqi-indicator {
+  display: inline-block;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  span {
+    min-width: 60px;
+    display: inline-block;
+    text-align: center;
+    font-size: 12px;
+    padding: 4px;
+    &.good {
+      background-color: #00FF00;
+    }
+    &.moderate {
+      background-color: #FFFF00;
+    }
+    &.unhealthy-for-sensitive-groups {
+      background-color: #EE7600;
+      color: #fff;
+    }
+    &.unhealthy {
+      background-color: #FF0000;
+      color: #fff;
+    }
+    &.very-unhealthy {
+      background-color: #800080;
+      color: #fff;
+    }
+    &.hazardous {
+      background-color: #FF34B3;
+      color: #fff;
+    }
+  }
 }

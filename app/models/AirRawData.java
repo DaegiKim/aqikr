@@ -62,18 +62,20 @@ public class AirRawData {
     }
 
     public static String getColor(double aqi) {
-        if(0 <= aqi && aqi <= 50) {
-            return "#00FF00";
+        if(aqi <= 0) {
+            return "#AAAAAA";
+        } else if(0 < aqi && aqi <= 50) {
+            return "#00FF00"; //Good
         } else if(51 <= aqi && aqi <= 100) {
-            return "#FFFF00";
+            return "#FFFF00"; //Moderate
         } else if(101 <= aqi && aqi <= 150) {
-            return "#EE7600";
+            return "#EE7600"; //Unhealthy for Sensitive Groups
         } else if(151 <= aqi && aqi <= 200) {
-            return "#FF0000";
+            return "#FF0000"; //Unhealthy
         } else if(201 <= aqi && aqi <= 300) {
-            return "#800080";
+            return "#800080"; //Very Unhealthy
         } else if(301 <= aqi && aqi <= 500) {
-            return "#FF34B3";
+            return "#FF34B3"; //Hazardous
         } else {
             return "#FFFFFF";
         }
@@ -114,6 +116,49 @@ public class AirRawData {
 
         return AQI;
     }
+
+    public static double AQIPM10(int concentration)
+    {
+        double conc = concentration;
+        double c;
+        double AQI;
+
+        c = Math.floor(conc);
+        if (c>=0 && c<55)
+        {
+            AQI=linear(50,0,54,0,c);
+        }
+        else if (c>=55 && c<155)
+        {
+            AQI=linear(100,51,154,55,c);
+        }
+        else if (c>=155 && c<255)
+        {
+            AQI=linear(150,101,254,155,c);
+        }
+        else if (c>=255 && c<355)
+        {
+            AQI=linear(200,151,354,255,c);
+        }
+        else if (c>=355 && c<425)
+        {
+            AQI=linear(300,201,424,355,c);
+        }
+        else if (c>=425 && c<505)
+        {
+            AQI=linear(400,301,504,425,c);
+        }
+        else if (c>=505 && c<605)
+        {
+            AQI=linear(500,401,604,505,c);
+        }
+        else
+        {
+            AQI=-1;
+        }
+        return AQI;
+    }
+
 
     public static double linear(double aqiHigh, double aqiLow, double concHigh, double concLow, double concentration) {
         return Math.round(((concentration - concLow) / (concHigh - concLow)) * (aqiHigh - aqiLow) + aqiLow);
