@@ -18,6 +18,12 @@ body {
       nav {
         display: inline-block;
         a {
+          @media (max-width: 767px) {
+            margin: 0 0.5rem;
+            padding: 8px;
+            line-height: 1em;
+            height: auto;
+          }
           margin: 0 1rem;
           &:not(.navbar-brand) {
             &:hover {
@@ -54,11 +60,10 @@ body {
   z-index: 3;
   font-size: 0;
   span {
-    min-width: 50px;
     display: inline-block;
     text-align: center;
     font-size: 11px;
-    padding: 4px 8px;
+    padding: 2px 4px;
     &.good {
       background-color: #00FF00;
     }
