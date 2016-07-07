@@ -24,7 +24,7 @@ public class AirRawData {
 
         JsonNode response = Json.parse(DataGoKr.excute());
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd H:m");
 
         for(JsonNode item : response.findValue("list")) {
             AirRawData airRawData = new AirRawData();

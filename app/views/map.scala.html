@@ -3,7 +3,7 @@
     <span id="aqi-indicator">
         <span class="good">좋음</span>
         <span class="moderate">보통</span>
-        <span class="unhealthy-for-sensitive-groups">민감한 집단에게 해로움</span>
+        <span class="unhealthy-for-sensitive-groups">민감한 사람에게 해로움</span>
         <span class="unhealthy">해로움</span>
         <span class="very-unhealthy">매우 해로움</span>
         <span class="hazardous">위험</span>
@@ -56,6 +56,10 @@
                         });
 
                     polygon.setMap(map);
+
+//                    daum.maps.event.addListener(polygon, 'mouseover', function() {
+//                        alert('test');
+//                    });
 
                     var customOverlay = new daum.maps.CustomOverlay({
                         position: new daum.maps.LatLng(station.center.lat, station.center.lng),

@@ -35,6 +35,8 @@ public class HomeController extends Controller {
         ObjectNode result = Json.newObject();
 
         for(Station station : stations) {
+            AirRawData airRawData = AirRawData.getByStation(station, airRawDataList);
+
             ObjectNode stationNode = Json.newObject();
 
             ArrayNode polygonNode = Json.newArray();
@@ -46,19 +48,18 @@ public class HomeController extends Controller {
                 polygonNode.add(latlng);
             }
 
-
             stationNode.set("polygon", polygonNode);
 
             //pm10
             ObjectNode pm10 = Json.newObject();
-            double aqipm10 = AirRawData.AQIPM10(AirRawData.getByStation(station, airRawDataList).pm10Value);
+            double aqipm10 = AirRawData.AQIPM10(airRawData.pm10Value);
             pm10.put("aqi", aqipm10);
             pm10.put("color", AirRawData.getColor(aqipm10));
             stationNode.set("pm10", pm10);
 
             //pm25
             ObjectNode pm25 = Json.newObject();
-            double aqipm25 = AirRawData.AQIPM25(AirRawData.getByStation(station, airRawDataList).pm25Value);
+            double aqipm25 = AirRawData.AQIPM25(airRawData.pm25Value);
             pm25.put("aqi", aqipm25);
             pm25.put("color", AirRawData.getColor(aqipm25));
             stationNode.set("pm25", pm25);
@@ -69,6 +70,9 @@ public class HomeController extends Controller {
             center.put("lat", centralGeoCoordinate.getLeft());
             center.put("lng", centralGeoCoordinate.getRight());
             stationNode.set("center", center);
+
+            //datetime
+            stationNode.put("datetime", airRawData.dateTime.toString());
 
             result.set(station.name, stationNode);
         }
