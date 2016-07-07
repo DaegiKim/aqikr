@@ -8,7 +8,6 @@ import play.libs.Json;
 import services.DataGoKr;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class AirRawData {
@@ -41,17 +40,6 @@ public class AirRawData {
         return airRawDataList;
     }
 
-    public static float getRatio(Station station, List<AirRawData> airRawDatas) {
-        final Comparator<AirRawData> comp = (p1, p2) -> Integer.compare( p1.pm25Value, p2.pm25Value);
-        int max = airRawDatas.stream().max(comp).get().pm25Value;
-
-        AirRawData airRawData = getByStation(station, airRawDatas);
-        if(airRawData != null) {
-            return (float)airRawData.pm25Value/(float)max;
-        }
-        return 0;
-    }
-
     public static AirRawData getByStation(Station station, List<AirRawData> airRawDatas) {
         for(AirRawData airRawData : airRawDatas) {
             if(airRawData.stationName.equals(station.name)) {
@@ -81,13 +69,11 @@ public class AirRawData {
         }
     }
 
-    public static double AQIPM25(int concentration)
-    {
-        double conc = concentration;
+    public static double AQIPM25(double conc) {
         double c;
         double AQI;
 
-        c = Math.floor(10 * conc) / 10;
+        c = Math.floor(conc);
 
         if(c>=0 && c<12.1) {
             AQI=linear(50, 0, 12, 0, c);
@@ -117,51 +103,41 @@ public class AirRawData {
         return AQI;
     }
 
-    public static double AQIPM10(int concentration)
-    {
-        double conc = concentration;
+    public static double AQIPM10(double conc) {
         double c;
         double AQI;
 
         c = Math.floor(conc);
-        if (c>=0 && c<55)
-        {
+
+        if (c>=0 && c<55) {
             AQI=linear(50,0,54,0,c);
         }
-        else if (c>=55 && c<155)
-        {
+        else if (c>=55 && c<155) {
             AQI=linear(100,51,154,55,c);
         }
-        else if (c>=155 && c<255)
-        {
+        else if (c>=155 && c<255) {
             AQI=linear(150,101,254,155,c);
         }
-        else if (c>=255 && c<355)
-        {
+        else if (c>=255 && c<355) {
             AQI=linear(200,151,354,255,c);
         }
-        else if (c>=355 && c<425)
-        {
+        else if (c>=355 && c<425) {
             AQI=linear(300,201,424,355,c);
         }
-        else if (c>=425 && c<505)
-        {
+        else if (c>=425 && c<505) {
             AQI=linear(400,301,504,425,c);
         }
-        else if (c>=505 && c<605)
-        {
+        else if (c>=505 && c<605) {
             AQI=linear(500,401,604,505,c);
         }
-        else
-        {
+        else {
             AQI=-1;
         }
+
         return AQI;
     }
-
 
     public static double linear(double aqiHigh, double aqiLow, double concHigh, double concLow, double concentration) {
         return Math.round(((concentration - concLow) / (concHigh - concLow)) * (aqiHigh - aqiLow) + aqiLow);
     }
-
 }
