@@ -5,16 +5,16 @@
 }
 <header class="navbar">
     <section class="navbar-section">
-        <a style="padding: 0;" href="@routes.HomeController.index()" class="btn btn-link btn-lg">
-            <img style="height: 40px;" src="@routes.Assets.versioned("images/icons/weather/sunny.png")" alt="">
-        </a>
-        <a href="@routes.HomeController.index()" class="navbar-brand">AQIkr</a>
         <nav>
-            <a href="@routes.HomeController.pm10()" class="@isActiveMenu(utils.MenuType.PM10) btn btn-link">미세먼지</a>
-            <a href="@routes.HomeController.pm25()" class="@isActiveMenu(utils.MenuType.PM25) btn btn-link">초미세먼지</a>
+            <a href="@routes.HomeController.index()" class="navbar-brand btn btn-link">
+                AQIkr
+            </a>
+            <a href="@routes.HomeController.map()" class="@isActiveMenu(utils.MenuType.MAP) btn btn-link">
+                실시간 AQI
+            </a>
         </nav>
     </section>
-    <section class="navbar-section hide-md">
-        <a href="#" class="btn btn-link">AQI란?</a>
-    </section>
+    @*<section class="navbar-section hide-md">*@
+        @*<a href="#" class="btn btn-link">AQI란?</a>*@
+    @*</section>*@
 </header>

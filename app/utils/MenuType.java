@@ -1,8 +1,8 @@
 package utils;
 
 public enum MenuType {
-    PM10(1),
-    PM25(2);
+    MAP(1),
+    TEST(3);
 
     private int type;
 

@@ -1,6 +1,7 @@
 GET     /                           controllers.HomeController.index
-GET     /pm10                       controllers.HomeController.pm10
-GET     /pm25                       controllers.HomeController.pm25
+GET     /test                       controllers.HomeController.test
+GET     /map                        controllers.HomeController.map
 GET     /data                       controllers.HomeController.data
+GET     /station/:stationName       controllers.HomeController.station(stationName)
 
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

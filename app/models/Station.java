@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 public class Station extends Model {
-    public static Finder<Long, Station> find = new Finder<Long,Station>(Station.class);
+    public static Finder<Long, Station> find = new Finder<>(Station.class);
 
     @Constraints.Required
     public String name;

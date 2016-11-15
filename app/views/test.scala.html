@@ -1,0 +1,31 @@
+@(menuType: utils.MenuType)
+@main("실시간 미세먼지 - AQIkr", menuType) {
+    <style>
+        body {
+            background-color: #000;
+        }
+    </style>
+    <div id="aqi-card">
+        <div class="station-name">성동구</div>
+        <div class="main-data">
+            <div class="aqi">70</div>
+            <div class="text">보통</div>
+            <div class="timestamp">35분 전</div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="data-list">
+            <div class="item">
+                <div class="title">초미세먼지</div>
+                <div class="aqi">49</div>
+                <div class="text">좋음</div>
+                <div class="value">59㎍/㎥</div>
+            </div>
+            <div class="item">
+                <div class="title">미세먼지</div>
+                <div class="aqi">90</div>
+                <div class="text">나쁨</div>
+                <div class="value">82㎍/㎥</div>
+            </div>
+        </div>
+    </div>
+}

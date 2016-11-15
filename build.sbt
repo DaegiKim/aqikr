@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
-  evolutions
+  evolutions,
+  "org.ocpsoft.prettytime" % "prettytime" % "3.2.5.Final"
 )
 
 includeFilter in (Assets, LessKeys.less) := "spectre.less"

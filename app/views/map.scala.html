@@ -1,5 +1,4 @@
-@(menuType: utils.MenuType)
-@main("실시간 미세먼지 - AQIkr", menuType) {
+@main("실시간 미세먼지 - AQIkr", utils.MenuType.MAP) {
     <span id="aqi-indicator">
         <span class="good">좋음</span>
         <span class="moderate">보통</span>
@@ -8,14 +7,44 @@
         <span class="very-unhealthy">매우 해로움</span>
         <span class="hazardous">위험</span>
     </span>
-    <div id="map"></div>
+    <div id="map">
+        <div id="aqi-card">
+            <span class="aqi-card-close"><i class="ion-close-circled"></i></span>
+            <div class="station-name"></div>
+            <div class="main-data">
+                <div class="aqi"></div>
+                <div class="text"></div>
+            </div>
+            <div style="clear: both;"></div>
+            <div class="data-list">
+                <div class="item pm25">
+                    <div class="title">초미세먼지</div>
+                    <div class="aqi"></div>
+                    <div class="raw"><span class="value"></span><span class="unit">µg/m³</span></div>
+                    <div class="text"></div>
+                </div>
+                <div class="item pm10">
+                    <div class="title">미세먼지</div>
+                    <div class="aqi"></div>
+                    <div class="raw"><span class="value"></span><span class="unit">µg/m³</span></div>
+                    <div class="text"></div>
+                </div>
+            </div>
+            <div class="timestamp">
+                <span class="title">
+                    <i class="ion-clock"></i>
+                    업데이트:
+                </span>
+                <span class="value"></span>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=1e218ac71dc2e4ddede21fd356f08ec2"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/map.js")"></script>
     <script>
-        var mode = '@menuType.name()';
         jQuery(document).ready(function () {
             jQuery.get('/data', function(data) {
-                renderData(data, mode);
+                renderData(data);
             });
         });
     </script>

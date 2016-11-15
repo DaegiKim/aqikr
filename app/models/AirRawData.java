@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import play.libs.Json;
 import services.DataGoKr;
+import utils.DateTimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,6 @@ public class AirRawData {
 
         JsonNode response = Json.parse(DataGoKr.excute());
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd H:m");
-
         for(JsonNode item : response.findValue("list")) {
             AirRawData airRawData = new AirRawData();
             airRawData.stationName = item.get("stationName").asText();
@@ -32,7 +31,8 @@ public class AirRawData {
             airRawData.pm10Value = item.get("pm10Value").asInt();
             airRawData.pm25Grade = item.get("pm25Grade").asInt();
             airRawData.pm25Value = item.get("pm25Value").asInt();
-            airRawData.dateTime = DateTime.parse(item.get("dataTime").asText(), dateTimeFormatter);
+
+            airRawData.dateTime = DateTimeUtil.parseFromDataGoKrFormat(item.get("dataTime").asText());
 
             airRawDataList.add(airRawData);
         }
@@ -66,6 +66,26 @@ public class AirRawData {
             return "#FF34B3"; //Hazardous
         } else {
             return "#FFFFFF";
+        }
+    }
+
+    public static String getLabel(double aqi) {
+        if(aqi <= 0) {
+            return "없음";
+        } else if(0 < aqi && aqi <= 50) {
+            return "좋음"; //Good
+        } else if(51 <= aqi && aqi <= 100) {
+            return "보통"; //Moderate
+        } else if(101 <= aqi && aqi <= 150) {
+            return "민감한 사람에게 해로움"; //Unhealthy for Sensitive Groups
+        } else if(151 <= aqi && aqi <= 200) {
+            return "해로움"; //Unhealthy
+        } else if(201 <= aqi && aqi <= 300) {
+            return "매우 해로움"; //Very Unhealthy
+        } else if(301 <= aqi && aqi <= 500) {
+            return "위험"; //Hazardous
+        } else {
+            return "없음";
         }
     }
 

@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class DataGoKr {
-    public static final String endpoint = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
-    public static final String params = "?" +
-            "sidoName=서울" +
+public class DataGoKrCopy {
+    private static final String endpoint = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty";
+    private static final String params = "?" +
+            "stationName={stationName}" +
             "&" +
             "_returnType=json" +
             "&" +
@@ -19,12 +19,14 @@ public class DataGoKr {
             "&" +
             "pageNo=1" +
             "&" +
-            "numOfRows=100";
+            "numOfRows=999" +
+            "&" +
+            "dataTerm=MONTH";
 
-    public static String excute() {
+    public static String excute(String stationName) {
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(endpoint+params);
+            URL url = new URL(endpoint+params.replace("{stationName}", stationName));
             connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("POST");
             connection.setUseCaches(false);

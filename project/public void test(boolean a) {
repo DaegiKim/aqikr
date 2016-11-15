@@ -1,0 +1,7 @@
+public void test(boolean a) {
+	System.out.println("hello world!");
+
+	if(a) {
+		return;
+	}
+}
