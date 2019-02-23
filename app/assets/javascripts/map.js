@@ -7,14 +7,13 @@ var map = new daum.maps.Map(mapContainer, mapOption);
 var zoomControl = new daum.maps.ZoomControl();
 map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
 map.setZoomable(false);
-// map.addOverlayMapTypeId(daum.maps.MapTypeId.TRAFFIC);
 
 function renderData(data) {
     jQuery.each(data, function(k, station) {
         var polygonPath = [];
         var color, aqi, name = k;
 
-        color = station.pm25.color;
+        color = station.color;
         aqi = station.pm25.aqi;
 
         // var aqiLabel = new daum.maps.CustomOverlay({
@@ -46,15 +45,27 @@ function renderData(data) {
             jQuery("#aqi-card .station-name").html("<a href='"+station.link+"'>"+name+"</a>");
 
             jQuery("#aqi-card .main-data .aqi").text(station.pm25.aqi);
-            jQuery("#aqi-card .main-data .text").text(station.pm25.label).css("background-color", station.pm25.color);
+            jQuery("#aqi-card .main-data .text").text(station.pm25.label)
+                .removeClass(function (index, css) {
+                    return (css.match (/(^|\s)level-\S+/g) || []).join(' ');
+                })
+                .addClass("aqi-label "+ station.pm25.level);
 
             jQuery("#aqi-card .data-list .pm25 .aqi").text(station.pm25.aqi);
-            jQuery("#aqi-card .data-list .pm25 .text").text(station.pm25.label).css("background-color", station.pm25.color);
             jQuery("#aqi-card .data-list .pm25 .raw .value").text(station.pm25.raw);
+            jQuery("#aqi-card .data-list .pm25 .text").text(station.pm25.label)
+                .removeClass(function (index, css) {
+                    return (css.match (/(^|\s)level-\S+/g) || []).join(' ');
+                })
+                .addClass("aqi-label "+ station.pm25.level);
 
             jQuery("#aqi-card .data-list .pm10 .aqi").text(station.pm10.aqi);
-            jQuery("#aqi-card .data-list .pm10 .text").text(station.pm10.label).css("background-color", station.pm10.color);
             jQuery("#aqi-card .data-list .pm10 .raw .value").text(station.pm10.raw);
+            jQuery("#aqi-card .data-list .pm10 .text").text(station.pm10.label)
+                .removeClass(function (index, css) {
+                    return (css.match (/(^|\s)level-\S+/g) || []).join(' ');
+                })
+                .addClass("aqi-label " + station.pm10.level);
 
             jQuery("#aqi-card .timestamp .value").text(station.datetime);
         });
@@ -72,3 +83,9 @@ function renderData(data) {
         });
     });
 }
+
+jQuery(document).ready(function() {
+    jQuery(document).on("click","#aqi-card .aqi-card-close",function() {
+        jQuery("#aqi-card").hide();
+    });
+});

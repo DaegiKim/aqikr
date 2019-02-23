@@ -2,10 +2,10 @@ package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import play.Logger;
 import play.libs.Json;
-import services.DataGoKr;
+import services.HttpURLConnection;
+import utils.ConstantUtil;
 import utils.DateTimeUtil;
 
 import java.util.ArrayList;
@@ -19,10 +19,50 @@ public class AirRawData {
     public int pm25Value;
     public DateTime dateTime;
 
+    public static JsonNode getDistrictsByTerm(String term) {
+        JsonNode jsonNode = null;
+        if(term != null) {
+            jsonNode = Json.parse(HttpURLConnection.excute(ConstantUtil.URL_SEARCH_BY_TERM.replace("{param1}", term)));
+        }
+        return jsonNode;
+    }
+
+    public static JsonNode getStationByXY(String x, String y) {
+        JsonNode jsonNode = null;
+        if(x != null && y != null) {
+            jsonNode = Json.parse(HttpURLConnection.excute(ConstantUtil.URL_SEARCH_BY_XY.replace("{param1}", x).replace("{param2}", y)));
+        }
+        return jsonNode;
+    }
+
+    public static JsonNode getStationData(String stationName) {
+        JsonNode jsonNode = null;
+        if(stationName != null) {
+            jsonNode = Json.parse(HttpURLConnection.excute(ConstantUtil.URL_STATION_DATA.replace("{param1}", stationName)));
+
+        }
+        return jsonNode;
+    }
+
+    public static JsonNode getStationDetail(String stationName) {
+        JsonNode jsonNode = null;
+        if(stationName != null) {
+            jsonNode = Json.parse(HttpURLConnection.excute(ConstantUtil.URL_STATION_DETAIL.replace("{param1}", stationName)));
+        }
+
+        return jsonNode;
+    }
+
+    public static JsonNode getAllStations() {
+        JsonNode jsonNode = Json.parse(HttpURLConnection.excute(ConstantUtil.URL_STATION_DETAIL.replace("{param1}", "")));
+
+        return jsonNode;
+    }
+
     public static List<AirRawData> getList() {
         List<AirRawData> airRawDataList = new ArrayList<>();
 
-        JsonNode response = Json.parse(DataGoKr.excute());
+        JsonNode response = Json.parse(HttpURLConnection.excute(ConstantUtil.URL_SIDO.replace("{param1}", "서울")));
 
         for(JsonNode item : response.findValue("list")) {
             AirRawData airRawData = new AirRawData();
@@ -66,6 +106,26 @@ public class AirRawData {
             return "#FF34B3"; //Hazardous
         } else {
             return "#FFFFFF";
+        }
+    }
+
+    public static String getLevel(double aqi) {
+        if(aqi <= 0) {
+            return "null";
+        } else if(0 < aqi && aqi <= 50) {
+            return "level-1"; //Good
+        } else if(51 <= aqi && aqi <= 100) {
+            return "level-2"; //Moderate
+        } else if(101 <= aqi && aqi <= 150) {
+            return "level-3"; //Unhealthy for Sensitive Groups
+        } else if(151 <= aqi && aqi <= 200) {
+            return "level-4"; //Unhealthy
+        } else if(201 <= aqi && aqi <= 300) {
+            return "level-5"; //Very Unhealthy
+        } else if(301 <= aqi && aqi <= 500) {
+            return "level-6"; //Hazardous
+        } else {
+            return "null";
         }
     }
 

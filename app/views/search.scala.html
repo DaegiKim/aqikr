@@ -1,0 +1,21 @@
+@(json: com.fasterxml.jackson.databind.JsonNode)
+@main("실시간 미세먼지 - AQIkr", utils.MenuType.SEARCH) {
+    @if(json != null) {
+        <table class="table">
+            <tbody>
+            @for(item <- json.get("list").elements()) {
+                <tr>
+                    <td>@item.get("sidoName").asText()</td>
+                    <td>@item.get("sggName").asText()</td>
+                    <td>@item.get("umdName").asText()</td>
+                    <td>
+                        <a href="@routes.HomeController.searchByXY(item.get("tmX").asText(), item.get("tmY").asText())">
+                            가까운 측정소 보기
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+}

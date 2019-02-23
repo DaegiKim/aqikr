@@ -1,37 +1,51 @@
-@(data: com.fasterxml.jackson.databind.JsonNode, stationName: String)
-@import play.libs.Json;
+@import utils.DateTimeUtil
+@import play.libs.Json
+@import com.fasterxml.jackson.databind.JsonNode
+@(stations: JsonNode, stationInfo: JsonNode, stationName: String, stationWeekly: List[StationWeekly])
 @main("실시간 미세먼지 - AQIkr", null) {
+    <div id="map" style="height: 200px;"></div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6367fada8407f0815375caf595533ff"></script>
+    <script>
+        var mapContainer = document.getElementById('map');
+        var mapOption = {
+            center: new daum.maps.LatLng(@stationInfo.get("list").get(0).get("dmX").asText(), @stationInfo.get("list").get(0).get("dmY").asText()),
+            level: 9
+        };
+        var map = new daum.maps.Map(mapContainer, mapOption);
+        var zoomControl = new daum.maps.ZoomControl();
+        map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
+        map.setZoomable(false);
+
+        var marker = new daum.maps.Marker({
+            position: new daum.maps.LatLng(@stationInfo.get("list").get(0).get("dmX").asText(), @stationInfo.get("list").get(0).get("dmY").asText())
+        });
+        marker.setMap(map);
+    </script>
     <div id="station-page">
-        <div class="station-page-title">@stationName</div>
-        <canvas id="myChart" height="100"></canvas>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>측정시간</th>
-                    <th>초미세먼지</th>
-                    <th>미세먼지</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for(item <- data.get("list").elements()) {
-                <tr>
-                    <td>@item.get("timestamp").asText()</td>
-                    <td>
-                        <span style="background-color: @item.get("pm25Color").asText()">@item.get("pm25AQI").asInt()</span>
-                        <span>(@item.get("pm25Value").asInt()µg/m³)</span>
-                    </td>
-                    <td>
-                        <span style="background-color: @item.get("pm10Color").asText()">@item.get("pm10AQI").asInt()</span>
-                        <span>(@item.get("pm10Value").asInt()µg/m³)</span>
-                    </td>
-                </tr>
+        <div class="station-page-title">
+            <span class="title">@stationName 측정소</span>
+            <span>(@stationInfo.get("list").get(0).get("addr").asText())</span>
+        </div>
+        <div class="daily-card-list">
+            @for(item <- stationWeekly) {
+                <div class="daily-card">
+                    <div class="day">
+                        <div>@DateTimeUtil.getKoreanDayOfWeek(item.dateTime.getDayOfWeek)</div>
+                        <small>@item.dateTime.getMonthOfYear/@item.dateTime.getDayOfMonth</small>
+                    </div>
+                    <div class="avg">
+                        <span class="aqi-label @AirRawData.getLevel(AirRawData.AQIPM25(item.avgPM25))">
+                            @AirRawData.AQIPM25(item.avgPM25).toInt
+                        </span>
+                    </div>
+                </div>
             }
-            </tbody>
-        </table>
+        </div>
+        <canvas id="myChart" height="100"></canvas>
     </div>
     <script>
             var json = [];
-            json = @Html(Json.stringify(data));
+            json = @Html(Json.stringify(stations));
             json.list = json.list.reverse();
 
             var label_list = [];
@@ -39,14 +53,14 @@
             var color_list = [];
 
             for (var i = 0; i < json.list.length; i++) {
-                label_list.push(json.list[i].timestamp);
+                label_list.push(json.list[i].dataTime);
                 data_list.push(parseInt(json.list[i].pm25AQI));
                 color_list.push(json.list[i].pm25Color);
             }
 
-            label_list = label_list.slice(label_list.length-(24*5));
-            data_list = data_list.slice(data_list.length-(24*5));
-            color_list = color_list.slice(color_list.length-(24*5));
+            label_list = label_list.slice(label_list.length-(24*7));
+            data_list = data_list.slice(data_list.length-(24*7));
+            color_list = color_list.slice(color_list.length-(24*7));
 
             var data = {
                 labels: label_list,
@@ -69,16 +83,34 @@
                     maintainAspectRatio: true,
                     scales: {
                         xAxes: [{
+//                            display: false,
                             type: 'time',
-//                            time: {
-//                                unit: 'week',
-//                                displayFormats: {
-//                                    hour: 'MMM D, hA'
-//                                }
-//                            }
+                            time: {
+                                unit: 'hour',
+                                tooltipFormat: 'MM/DD HH:mm',
+                                displayFormats: {
+                                    hour: ' '
+                                }
+                            },
+                            gridLines: {
+                                color: "rgba(0, 0, 0, 0)",
+                                zeroLineColor: "rgba(0, 0, 0, 0)"
+                            },
+                        }],
+                        yAxes: [{
+                            display: false,
+                            gridLines: {
+                                color: "rgba(0, 0, 0, 0)",
+                                zeroLineColor: "rgba(0, 0, 0, 0)"
+                            }
                         }]
+                    },
+                    legend:{
+                        display: false
                     }
                 }
             });
+
+            Chart.defaults.global.defaultFontColor = "#fff";
     </script>
 }

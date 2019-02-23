@@ -1,12 +1,4 @@
 @main("실시간 미세먼지 - AQIkr", utils.MenuType.MAP) {
-    <span id="aqi-indicator">
-        <span class="good">좋음</span>
-        <span class="moderate">보통</span>
-        <span class="unhealthy-for-sensitive-groups">민감한 사람에게 해로움</span>
-        <span class="unhealthy">해로움</span>
-        <span class="very-unhealthy">매우 해로움</span>
-        <span class="hazardous">위험</span>
-    </span>
     <div id="map">
         <div id="aqi-card">
             <span class="aqi-card-close"><i class="ion-close-circled"></i></span>
@@ -36,10 +28,20 @@
                     업데이트:
                 </span>
                 <span class="value"></span>
+                |
+                <span>자료제공: 한국환경공단</span>
             </div>
         </div>
+        <span id="aqi-indicator">
+            <span class="good">좋음</span>
+            <span class="moderate">보통</span>
+            <span class="unhealthy-for-sensitive-groups">민감한 사람에게 해로움</span>
+            <span class="unhealthy">해로움</span>
+            <span class="very-unhealthy">매우 해로움</span>
+            <span class="hazardous">위험</span>
+        </span>
     </div>
-    <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=1e218ac71dc2e4ddede21fd356f08ec2"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6367fada8407f0815375caf595533ff"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/map.js")"></script>
     <script>
         jQuery(document).ready(function () {

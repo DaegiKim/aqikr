@@ -12,6 +12,10 @@
             <a href="@routes.HomeController.map()" class="@isActiveMenu(utils.MenuType.MAP) btn btn-link">
                 실시간 AQI
             </a>
+            <form action="@routes.HomeController.search(null)" method="GET">
+                <input type="text" name="term" required autocomplete="off" placeholder="동 이름으로 검색해보세요".">
+                <button type="submit">검색</button>
+            </form>
         </nav>
     </section>
     @*<section class="navbar-section hide-md">*@

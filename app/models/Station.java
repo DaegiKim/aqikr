@@ -1,7 +1,8 @@
 package models;
 
-import com.avaje.ebean.Model;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.ebean.Finder;
+import io.ebean.Model;
 import org.apache.commons.lang3.tuple.Pair;
 import play.data.validation.Constraints;
 import play.libs.Json;

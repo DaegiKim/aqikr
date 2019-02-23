@@ -2,7 +2,9 @@ package utils;
 
 public enum MenuType {
     MAP(1),
-    TEST(3);
+    STATION(2),
+    TEST(3),
+    SEARCH(4);
 
     private int type;
 

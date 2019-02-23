@@ -1,31 +1,52 @@
-@(menuType: utils.MenuType)
-@main("실시간 미세먼지 - AQIkr", menuType) {
-    <style>
-        body {
-            background-color: #000;
-        }
-    </style>
-    <div id="aqi-card">
-        <div class="station-name">성동구</div>
-        <div class="main-data">
-            <div class="aqi">70</div>
-            <div class="text">보통</div>
-            <div class="timestamp">35분 전</div>
-        </div>
-        <div style="clear: both;"></div>
-        <div class="data-list">
-            <div class="item">
-                <div class="title">초미세먼지</div>
-                <div class="aqi">49</div>
-                <div class="text">좋음</div>
-                <div class="value">59㎍/㎥</div>
-            </div>
-            <div class="item">
-                <div class="title">미세먼지</div>
-                <div class="aqi">90</div>
-                <div class="text">나쁨</div>
-                <div class="value">82㎍/㎥</div>
-            </div>
-        </div>
-    </div>
+@(stations: com.fasterxml.jackson.databind.JsonNode)
+@import play.libs.Json;
+@main("실시간 미세먼지 - AQIkr", utils.MenuType.TEST) {
+    @partial._render_json(stations)
+    <div id="map"></div>
+    <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=1e218ac71dc2e4ddede21fd356f08ec2"></script>
+    <script>
+            var mapContainer = document.getElementById('map');
+            var mapOption = {
+                center: new daum.maps.LatLng(37.5665, 126.9780),
+                level: 9
+            };
+            var map = new daum.maps.Map(mapContainer, mapOption);
+            var zoomControl = new daum.maps.ZoomControl();
+            map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
+            map.setZoomable(false);
+
+            var json = [];
+            json = @Html(Json.stringify(stations));
+
+            for(var i = 0; i<json.list.length; i++) {
+                console.log(json.list[i]);
+                var x = json.list[i].dmX;
+                var y = json.list[i].dmY;
+                var stationName = json.list[i].stationName;
+
+//                var aqiLabel = new daum.maps.CustomOverlay({
+//                    position: new daum.maps.LatLng(x, y),
+//                    content: '<div class ="label">'+stationName+'</div>'
+//                });
+//                aqiLabel.setMap(map);
+
+                jQuery.ajax({
+                    url: "/color?stationName="+stationName,
+                    type: "GET",
+                    async: false,
+                    success: function(result) {
+                        console.log(result);
+                        var aqiLabel = new daum.maps.CustomOverlay({
+                            position: new daum.maps.LatLng(x, y),
+                            content: '<div class ="label" style="background-color: '+result.color+'">'+stationName+'</div>'
+                        });
+                        aqiLabel.setMap(map);
+                    },
+                    beforeSend:function(){
+                    },
+                    complete:function(){
+                    }
+                });
+            }
+    </script>
 }
