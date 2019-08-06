@@ -54,9 +54,7 @@ public class AirRawData {
     }
 
     public static JsonNode getAllStations() {
-        JsonNode jsonNode = Json.parse(HttpURLConnection.excute(ConstantUtil.URL_STATION_DETAIL.replace("{param1}", "")));
-
-        return jsonNode;
+        return Json.parse(HttpURLConnection.excute(ConstantUtil.URL_STATION_DETAIL.replace("{param1}", "")));
     }
 
     public static List<AirRawData> getList() {
@@ -217,7 +215,7 @@ public class AirRawData {
         return AQI;
     }
 
-    public static double linear(double aqiHigh, double aqiLow, double concHigh, double concLow, double concentration) {
+    private static double linear(double aqiHigh, double aqiLow, double concHigh, double concLow, double concentration) {
         return Math.round(((concentration - concLow) / (concHigh - concLow)) * (aqiHigh - aqiLow) + aqiLow);
     }
 }
